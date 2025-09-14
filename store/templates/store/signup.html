@@ -1,0 +1,6 @@
+<h2>ثبت نام</h2>
+<form method="POST">
+    {% crsf_token %}
+    {{ form.as_p}}
+    <button type="submit">ثبت نام</button>
+</form>
