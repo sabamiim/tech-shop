@@ -1,0 +1,22 @@
+<h2>سبد خرید</h2>
+<ul>
+  {% for item in cart %}
+    <li>
+      {{ item.product.name }} - {{ item.quantity }} عدد - {{ item.total_price }} تومان
+      <a href="{% url 'remove_from_cart' item.product.id %}">❌ حذف</a>
+    </li>
+  {% empty %}
+    <li>سبد خرید خالی است.</li>
+  {% endfor %}
+</ul>
+
+<p>مجموع: {{ cart.get_total_price }} تومان</p>
+
+
+
+
+<!--۵. دکمه اضافه‌کردن محصول-->
+
+<!--در صفحه محصول یا لیست محصولات این لینک رو بذار:-->
+
+<!--<a href="{% url 'add_to_cart' product.id %}">➕ افزودن به سبد</a>-->
