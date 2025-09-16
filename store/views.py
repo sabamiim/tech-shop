@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 from store.cart import Cart
 from store.forms import SignUpForm
-from store.models import Order, Product
+from store.models import Order, Product, OrderItem
 
 
 def signup_view(request):
@@ -41,6 +41,29 @@ def remove_from_cart(request , product_id):
 def cart_detail(request):
     cart = Cart(request)
     return render(request, 'store/cart_detail.html', {'cart':cart})
+
+
+@login_required()
+def checkout(request):
+    cart = Cart(request)
+    if request.method == "post":
+        order = Order.objects.create(user=request.user)
+        for item in cart:
+            OrderItem.objects.create(
+                order=order,
+                product=item['product'],
+                quantity=item['quantity'],
+                price=item['price'],
+            )
+        cart.clear()
+        return redirect("profile")
+    return render(request,"store/checkout.html",{"cart":cart})
+
+@login_required
+def profile(request):
+    orders = request.user.orders.all()
+    return render(request, "store/profile.html", {"orders": orders})
+
 
 
 
