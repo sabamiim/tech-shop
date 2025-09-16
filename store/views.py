@@ -1,9 +1,12 @@
+from itertools import product
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
+from store.cart import Cart
 from store.forms import SignUpForm
-from store.models import Order
+from store.models import Order, Product
 
 
 def signup_view(request):
@@ -22,4 +25,23 @@ def signup_view(request):
 def profile_view(request):
     orders = Order.objects.filter(user=request.user)
     return render(request, 'store/profile,html', {'orders':orders})
+
+def add_to_cart(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    cart.add(product)
+    return redirect('cart_detail')
+
+def remove_from_cart(request , product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product,id=product_id)
+    cart.remove(product)
+    return redirect('cart_detail')
+
+def cart_detail(request):
+    cart = Cart(request)
+    return render(request, 'store/cart_detail.html', {'cart':cart})
+
+
+
 
